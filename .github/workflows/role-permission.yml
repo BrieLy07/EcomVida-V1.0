@@ -30,7 +30,7 @@ jobs:
           go-version: 1.21
 
       - name: Crear .env
-        working-directory: autenticación/role-permission-service
+        working-directory: autenticacion/role-permission-service
         run: |
           echo "PORT=8083" > .env
           echo "DB_HOST=localhost" >> .env
@@ -41,13 +41,13 @@ jobs:
           echo "JWT_SECRET=miclavesecreta" >> .env
 
       - name: Instalar dependencias
-        working-directory: autenticación/role-permission-service
+        working-directory: autenticacion/role-permission-service
         run: go mod tidy
 
       - name: Build del proyecto
-        working-directory: autenticación/role-permission-service
+        working-directory: autenticacion/role-permission-service
         run: go build -o main ./cmd
 
       - name: Validar sintaxis
-        working-directory: autenticación/role-permission-service
+        working-directory: autenticacion/role-permission-service
         run: go vet ./...
