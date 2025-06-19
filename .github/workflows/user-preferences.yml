@@ -16,14 +16,6 @@ jobs:
         ports:
           - 8000:8000
 
-    env:
-      AWS_REGION: ${{ secrets.PREFS_AWS_REGION }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.PREFS_AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.PREFS_AWS_SECRET_ACCESS_KEY }}
-      DYNAMODB_ENDPOINT: ${{ secrets.PREFS_DYNAMODB_ENDPOINT }}
-      DYNAMODB_TABLE: ${{ secrets.PREFS_DYNAMODB_TABLE }}
-      JWT_SECRET: ${{ secrets.PREFS_JWT_SECRET }}
-
     steps:
       - name: Clonar repositorio
         uses: actions/checkout@v4
@@ -35,8 +27,21 @@ jobs:
 
       - name: Instalar dependencias
         working-directory: autenticación/user-preferences-service
-        run: composer install
+        run: |
+          composer install
 
-      - name: Validar ejecución
+      - name: Crear .env local para testing
         working-directory: autenticación/user-preferences-service
-        run: php -l src/index.php
+        run: |
+          echo "AWS_REGION=us-west-2" > .env
+          echo "AWS_ACCESS_KEY_ID=test" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=test" >> .env
+          echo "DYNAMODB_ENDPOINT=http://localhost:8000" >> .env
+          echo "DYNAMODB_TABLE=preferencias_usuario" >> .env
+          echo "JWT_SECRET=miclavesecreta" >> .env
+
+      - name: Validar sintaxis PHP
+        working-directory: autenticación/user-preferences-service
+        run: |
+          php -l src/index.php
+          php -l src/dynamo.php
