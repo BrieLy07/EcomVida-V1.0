@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  role-api:
+    build: .
+    ports:
+      - "8083:8083"
+    env_file:
+      - .env
+    depends_on:
+      - role-db
+    networks:
+      - rolenet
+
+  role-db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_DB: rolesdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - rolenet
+
+volumes:
+  pgdata:
+
+networks:
+  rolenet:

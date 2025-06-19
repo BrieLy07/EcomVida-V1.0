@@ -1,0 +1,53 @@
+name: CI - Role Permission Service
+
+on:
+  push:
+    branches: [ main, test ]
+  pull_request:
+    branches: [ main, test ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: rolesdb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin123
+        ports:
+          - 5435:5432
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.21
+
+      - name: Crear .env
+        working-directory: autenticación/role-permission-service
+        run: |
+          echo "PORT=8083" > .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5435" >> .env
+          echo "DB_USER=postgres" >> .env
+          echo "DB_PASSWORD=admin123" >> .env
+          echo "DB_NAME=rolesdb" >> .env
+          echo "JWT_SECRET=miclavesecreta" >> .env
+
+      - name: Instalar dependencias
+        working-directory: autenticación/role-permission-service
+        run: go mod tidy
+
+      - name: Build del proyecto
+        working-directory: autenticación/role-permission-service
+        run: go build -o main ./cmd
+
+      - name: Validar sintaxis
+        working-directory: autenticación/role-permission-service
+        run: go vet ./...
