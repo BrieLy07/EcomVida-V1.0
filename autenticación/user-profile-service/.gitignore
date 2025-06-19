@@ -1,0 +1,32 @@
+# Entornos virtuales
+venv/
+.env
+.env.*
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de log o debug
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Docker
+*.tar
+*.img
+
+# PyInstaller
+*.spec
+build/
+dist/
+
+# VSCode
+.vscode/
+
+# Archivos de ejecución
+*.pid

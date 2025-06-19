@@ -1,0 +1,8 @@
+flask
+flask-graphql
+flask-cors
+pymongo
+python-dotenv
+graphql-core
+graphene 
+PyJWT

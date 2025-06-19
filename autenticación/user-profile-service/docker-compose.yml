@@ -1,31 +1,22 @@
 version: "3.8"
 services:
-  auth-api:
+  perfil-api:
     build: .
     ports:
-      - "3000:3000"
-    env_file: .env
+      - "5000:5000"
+    env_file:
+      - .env
     depends_on:
-      - auth-db
+      - mongo
     networks:
-      - authnet
+      - perfnet
 
-  auth-db:
-    image: postgres:14
-    restart: always
-    environment:
-      POSTGRES_DB: authdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin123
+  mongo:
+    image: mongo:6
     ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - "27017:27017"
     networks:
-      - authnet
-
-volumes:
-  pgdata:
+      - perfnet
 
 networks:
-  authnet:
+  perfnet:
