@@ -36,12 +36,12 @@ jobs:
           python-version: 3.11
 
       - name: Instalar dependencias
-        working-directory: autenticación/user-profile-service
+        working-directory: autenticacion/user-profile-service
         run: |
           pip install --no-cache-dir -r requirements.txt
 
       - name: Validar ejecución
-        working-directory: autenticación/user-profile-service
+        working-directory: autenticacion/user-profile-service
         run: |
           python src/main.py &
           sleep 5

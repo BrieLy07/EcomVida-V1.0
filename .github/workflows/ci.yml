@@ -35,9 +35,9 @@ jobs:
           node-version: 20
 
       - name: Instalar dependencias
-        working-directory: autenticación/auth-service
+        working-directory: autenticacion/auth-service
         run: npm install
 
       - name: Ejecutar microservicio
-        working-directory: autenticación/auth-service
+        working-directory: autenticacion/auth-service
         run: npm run start &

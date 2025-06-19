@@ -26,12 +26,12 @@ jobs:
           php-version: 8.2
 
       - name: Instalar dependencias
-        working-directory: autenticación/user-preferences-service
+        working-directory: autenticacion/user-preferences-service
         run: |
           composer install
 
       - name: Crear .env local para testing
-        working-directory: autenticación/user-preferences-service
+        working-directory: autenticacion/user-preferences-service
         run: |
           echo "AWS_REGION=us-west-2" > .env
           echo "AWS_ACCESS_KEY_ID=test" >> .env
@@ -41,7 +41,7 @@ jobs:
           echo "JWT_SECRET=miclavesecreta" >> .env
 
       - name: Validar sintaxis PHP
-        working-directory: autenticación/user-preferences-service
+        working-directory: autenticacion/user-preferences-service
         run: |
           php -l src/index.php
           php -l src/dynamo.php

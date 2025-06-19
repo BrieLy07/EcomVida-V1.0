@@ -1,0 +1,22 @@
+# Composer
+/vendor/
+composer.lock
+
+# Variables de entorno
+.env
+.env.*
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.cache
+*.tmp
+
+# IDEs y editores
+.vscode/
+.idea/
