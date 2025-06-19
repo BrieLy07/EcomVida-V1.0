@@ -1,0 +1,42 @@
+name: CI - User Preferences Service
+
+on:
+  push:
+    branches: [ main, test ]
+  pull_request:
+    branches: [ main, test ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - 8000:8000
+
+    env:
+      AWS_REGION: ${{ secrets.PREFS_AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.PREFS_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PREFS_AWS_SECRET_ACCESS_KEY }}
+      DYNAMODB_ENDPOINT: ${{ secrets.PREFS_DYNAMODB_ENDPOINT }}
+      DYNAMODB_TABLE: ${{ secrets.PREFS_DYNAMODB_TABLE }}
+      JWT_SECRET: ${{ secrets.PREFS_JWT_SECRET }}
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Instalar dependencias
+        working-directory: autenticación/user-preferences-service
+        run: composer install
+
+      - name: Validar ejecución
+        working-directory: autenticación/user-preferences-service
+        run: php -l src/index.php
