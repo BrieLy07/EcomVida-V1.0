@@ -21,18 +21,9 @@ jobs:
           --health-timeout=5s 
           --health-retries=5
 
-    container:
-      image: ghcr.io/mlocati/docker-php-extension-installer:php8.2-cli
-
     steps:
       - name: Clonar repositorio
         uses: actions/checkout@v4
-
-      - name: Instalar extensión MongoDB y Composer
-        run: |
-          install-php-extensions mongodb
-          curl -sS https://getcomposer.org/installer | php
-          mv composer.phar /usr/local/bin/composer
 
       - name: Crear archivo .env
         working-directory: productos/product-variant-service
@@ -40,6 +31,15 @@ jobs:
           echo "MONGO_URI=${{ secrets.VARIANT_MONGO_URI }}" > .env
           echo "MONGO_DB=${{ secrets.VARIANT_MONGO_DB }}" >> .env
 
-      - name: Instalar dependencias
+      - name: Instalar PHP, extensión MongoDB y Composer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php php-cli php-dev php-pear php-mbstring unzip git curl pkg-config libssl-dev
+          sudo pecl install mongodb-1.21.1
+          echo "extension=mongodb.so" | sudo tee -a $(php -i | grep 'Loaded Configuration File' | awk '{print $5}')
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar /usr/local/bin/composer
+
+      - name: Instalar dependencias PHP
         working-directory: productos/product-variant-service
         run: composer install --no-interaction
