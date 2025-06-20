@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  product-variant-api:
+    build: .
+    ports:
+      - "8085:8085"
+    env_file:
+      - .env
+    depends_on:
+      - product-variant-db
+    networks:
+      - variantnet
+
+  product-variant-db:
+    image: mongo:6
+    ports:
+      - "27028:27017"
+    networks:
+      - variantnet
+
+networks:
+  variantnet:
