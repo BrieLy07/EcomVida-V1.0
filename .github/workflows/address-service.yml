@@ -35,7 +35,7 @@ jobs:
           java-version: '17'
 
       - name: Crear archivo .env
-        working-directory: autenticación/address-service
+        working-directory: autenticacion/address-service
         run: |
           echo "SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3307/${{ secrets.ADDRESS_DB_NAME }}" > .env
           echo "SPRING_DATASOURCE_USERNAME=root" >> .env
@@ -43,9 +43,9 @@ jobs:
           echo "JWT_SECRET=miclavesecreta" >> .env
 
       - name: Dar permisos al wrapper de Maven
-        working-directory: autenticación/address-service
+        working-directory: autenticacion/address-service
         run: chmod +x mvnw
 
       - name: Construir proyecto con Maven
-        working-directory: autenticación/address-service
+        working-directory: autenticacion/address-service
         run: ./mvnw clean package -DskipTests
