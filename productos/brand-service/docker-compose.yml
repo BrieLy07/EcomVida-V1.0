@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  brand-api:
+    build: .
+    ports:
+      - "8083:8083"
+    env_file:
+      - .env
+    depends_on:
+      - brand-db
+    networks:
+      - brandnet
+
+  brand-db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3310:3306"
+    networks:
+      - brandnet
+
+networks:
+  brandnet:
