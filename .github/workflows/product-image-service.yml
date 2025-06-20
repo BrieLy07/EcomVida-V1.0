@@ -11,15 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      minio:
-        image: minio/minio
-        ports:
-          - 9000:9000
-        env:
-          MINIO_ACCESS_KEY: minioadmin
-          MINIO_SECRET_KEY: minioadmin
-        options: --entrypoint "sh -c 'mkdir -p /data && minio server /data'"
-
       redis:
         image: redis:7
         ports:
@@ -28,6 +19,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Levantar MinIO manualmente
+        run: |
+          docker run -d \
+            -p 9000:9000 \
+            --name minio \
+            -e MINIO_ACCESS_KEY=minioadmin \
+            -e MINIO_SECRET_KEY=minioadmin \
+            minio/minio server /data
 
       - name: Crear archivo .env
         working-directory: productos/product-image-service
