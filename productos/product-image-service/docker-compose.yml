@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  image-api:
+    build: .
+    ports:
+      - "8086:8080"
+    env_file:
+      - .env
+    depends_on:
+      - minio
+      - redis
+    networks:
+      - imagenet
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    command: server /data
+    networks:
+      - imagenet
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - imagenet
+
+networks:
+  imagenet:
