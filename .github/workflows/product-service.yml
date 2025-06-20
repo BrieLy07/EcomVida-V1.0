@@ -1,0 +1,49 @@
+name: CI - Product Service
+
+on:
+  push:
+    branches: [main, test]
+  pull_request:
+    branches: [main, test]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: ${{ secrets.PRODUCT_DB_NAME }}
+          POSTGRES_USER: ${{ secrets.PRODUCT_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PRODUCT_DB_PASSWORD }}
+        ports:
+          - 5437:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Crear archivo .env
+        working-directory: productos/product-service
+        run: |
+          echo "DB_HOST=localhost" > .env
+          echo "DB_PORT=5437" >> .env
+          echo "DB_NAME=${{ secrets.PRODUCT_DB_NAME }}" >> .env
+          echo "DB_USER=${{ secrets.PRODUCT_DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.PRODUCT_DB_PASSWORD }}" >> .env
+
+      - name: Instalar dependencias
+        working-directory: productos/product-service
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar prueba de importación
+        working-directory: productos/product-service
+        run: python -c "import app.main"
