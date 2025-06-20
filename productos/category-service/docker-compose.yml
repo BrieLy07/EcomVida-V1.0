@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  category-api:
+    build: .
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env
+    depends_on:
+      - category-db
+    networks:
+      - categorynet
+
+  category-db:
+    image: mysql:8
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3309:3306"
+    volumes:
+      - categorydata:/var/lib/mysql
+    networks:
+      - categorynet
+
+volumes:
+  categorydata:
+
+networks:
+  categorynet:
