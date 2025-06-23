@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prueba WebSocket - Order Tracking</title>
+</head>
+<body>
+  <h2>Seguimiento de órdenes</h2>
+  <input id="mensaje" placeholder="Escribe un mensaje" />
+  <button onclick="enviar()">Enviar</button>
+  <ul id="mensajes"></ul>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:8088/ws");
+
+    socket.onmessage = function(event) {
+      const li = document.createElement("li");
+      li.textContent = "Recibido: " + event.data;
+      document.getElementById("mensajes").appendChild(li);
+    };
+
+    function enviar() {
+      const msg = document.getElementById("mensaje").value;
+      socket.send(msg);
+    }
+  </script>
+</body>
+</html>
