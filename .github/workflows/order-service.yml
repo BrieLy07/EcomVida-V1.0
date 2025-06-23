@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main, test]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,6 +32,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
+
+      - name: Grant execute permission to mvnw
+        working-directory: pedidos/order-service
+        run: chmod +x mvnw
 
       - name: Build with Maven
         working-directory: pedidos/order-service
