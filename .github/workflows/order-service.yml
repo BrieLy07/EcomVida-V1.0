@@ -1,4 +1,4 @@
-name: CI - order-service
+name: CI - Order-Service
 
 on:
   push:
@@ -35,9 +35,9 @@ jobs:
           java-version: 17
 
       - name: Build with Maven
-        working-directory: pedidos-y-pagos/order-service
+        working-directory: pedidos/order-service
         run: ./mvnw clean package -DskipTests
 
       - name: Docker Build
-        working-directory: pedidos-y-pagos/order-service
+        working-directory: pedidos/order-service
         run: docker build -t order-service .
