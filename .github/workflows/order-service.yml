@@ -1,12 +1,11 @@
-name: order-service
+name: CI - order-service
 
 on:
   push:
-    paths:
-      - 'pedidos-y-pagos/order-service/**'
+    branches: [main, test]
   pull_request:
-    paths:
-      - 'pedidos-y-pagos/order-service/**'
+    branches: [main, test]
+
 
 jobs:
   build:
