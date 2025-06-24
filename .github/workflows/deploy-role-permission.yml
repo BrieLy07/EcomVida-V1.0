@@ -1,0 +1,25 @@
+name: Deploy RolePermissionService to EC2
+
+on:
+  push:
+    branches:
+      - test2
+    paths:
+      - 'autenticacion/role-permission-service/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Acceso por SSH y despliegue en EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AUTH_EC2_HOST }}
+          username: ${{ secrets.AUTH_EC2_USER }}
+          key: ${{ secrets.AUTH_EC2_SSH_KEY }}
+          script: |
+            cd ~/ec2/EcomVida-V1.0/autenticacion/role-permission-service
+            git pull origin test2
+            docker-compose down
+            docker-compose up -d --build
