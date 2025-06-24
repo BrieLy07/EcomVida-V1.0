@@ -1,25 +1,15 @@
-FROM golang:1.21
+FROM golang:1.20
 
 WORKDIR /app
 
-# Instalar netcat
-RUN apt-get update && apt-get install -y postgresql-client
-
-
-# Copiar dependencias
-COPY go.mod go.sum ./
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
 
-# Copiar código fuente
 COPY . .
 
-# Compilar el binario
-RUN go build -o main ./cmd
+RUN go build -o main .
 
-# Copiar y dar permisos al script de espera
-COPY wait-for-db.sh .
-RUN chmod +x wait-for-db.sh
+EXPOSE 3004
 
-EXPOSE 8083
-
-CMD ["./wait-for-db.sh", "./main"]
+CMD ["./main"]

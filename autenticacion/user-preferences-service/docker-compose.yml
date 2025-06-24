@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  user-preferences:
+    build: .
+    ports:
+      - "3003:3003"
+    volumes:
+      - .:/var/www/html
+    env_file:
+      - .env
+
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+    command: -jar DynamoDBLocal.jar -sharedDb
