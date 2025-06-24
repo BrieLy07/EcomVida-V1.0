@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 3002
 
-CMD ["python", "main.py"]
+CMD ["python", "src/main.py"]
