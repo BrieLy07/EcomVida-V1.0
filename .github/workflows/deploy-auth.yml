@@ -15,9 +15,9 @@ jobs:
       - name: Acceso por SSH y despliegue en EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.AUTH_EC2_HOST }}
+          username: ${{ secrets.AUTH_EC2_USER }}
+          key: ${{ secrets.AUTH_EC2_SSH_KEY }}
           script: |
             cd ~/ecomvida/EcomVida-V1.0/autenticacion/auth-service
             git pull origin test2
