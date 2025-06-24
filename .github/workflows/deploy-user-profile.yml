@@ -5,7 +5,7 @@ on:
     branches:
       - test2
     paths:
-      - 'vida/autenticacion/user-profile-service/**'
+      - 'autenticacion/user-profile-service/**'
 
 jobs:
   deploy:
