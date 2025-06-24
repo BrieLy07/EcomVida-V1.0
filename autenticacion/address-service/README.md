@@ -1,6 +1,6 @@
 # Address Service - ECOMVIDA
 
-Microservicio REST en Java con Spring Boot que gestiona direcciones de usuarios. Usa MySQL para almacenar datos y JWT para autenticación.
+Microservicio REST en Java con Spring Boot que gestiona direcciones de usuarios. Usa MySQL para almacenar datos y JWT para autenticación..
 
 ---
 
