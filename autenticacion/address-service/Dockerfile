@@ -10,5 +10,5 @@ WORKDIR /app
 
 COPY --from=build /app/target/address-service-1.0.0.jar app.jar
 
-EXPOSE 8080
+EXPOSE 3005
 CMD ["java", "-jar", "app.jar"]
