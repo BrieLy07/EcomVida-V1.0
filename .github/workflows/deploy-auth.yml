@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.AUTH_EC2_USER }}
           key: ${{ secrets.AUTH_EC2_SSH_KEY }}
           script: |
-            cd ~/ecomvida/EcomVida-V1.0/autenticacion/auth-service
+            cd ~/ec2/EcomVida-V1.0/autenticacion/auth-service
             git pull origin test2
             docker-compose down
             docker-compose up -d --build
