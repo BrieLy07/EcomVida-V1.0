@@ -3,29 +3,10 @@ services:
   auth-api:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     env_file: .env
-    depends_on:
-      - auth-db
     networks:
       - authnet
-
-  auth-db:
-    image: postgres:14
-    restart: always
-    environment:
-      POSTGRES_DB: authdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin123
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - authnet
-
-volumes:
-  pgdata:
 
 networks:
   authnet:
