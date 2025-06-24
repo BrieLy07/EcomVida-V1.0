@@ -1,6 +1,7 @@
 # Auth Service - ECOMVIDA
 
 Microservicio de autenticación para la plataforma eCommerce ECOMVIDA. Permite el registro y login de usuarios mediante API REST y manejo de JWT...
+..
 
 ---
 
