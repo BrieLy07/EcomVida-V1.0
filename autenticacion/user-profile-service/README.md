@@ -1,6 +1,6 @@
 # User Profile Service - ECOMVIDA
 
-Microservicio para gestionar el perfil de usuario autenticado dentro de la plataforma ECOMVIDA. Funciona bajo arquitectura GraphQL, conectado a MongoDB y protegido por token JWT emitido desde el `auth-service`.
+Microservicio para gestionar el perfil de usuario autenticado dentro de la plataforma ECOMVIDA. Funciona bajo arquitectura GraphQL, conectado a MongoDB y protegido por token JWT emitido desde el `auth-service`...
 
 ---
 
