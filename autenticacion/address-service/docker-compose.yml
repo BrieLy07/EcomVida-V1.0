@@ -4,3 +4,4 @@ services:
     container_name: address-service
     ports:
       - "3005:3005"
+    restart: always
