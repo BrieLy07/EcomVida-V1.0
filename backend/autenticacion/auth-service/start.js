@@ -1,12 +1,11 @@
-const initDB = require('./database/initDB');
+// start.js
+const { initDB } = require('./db'); // ← esto es lo que fallaba
 const app = require('./app');
-
-const PORT = process.env.PORT || 3001;
 
 const iniciar = async () => {
   await initDB(); // crea tabla si no existe
-  app.listen(PORT, () => {
-    console.log(`Auth Service corriendo en puerto ${PORT}`);
+  app.listen(3001, () => {
+    console.log('Servidor corriendo en puerto 3001');
   });
 };
 
