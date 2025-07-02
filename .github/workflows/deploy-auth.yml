@@ -1,0 +1,48 @@
+name: Deploy auth-service and auth-front to EC2
+
+on:
+  push:
+    branches:
+      - test3
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Desplegar en EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AUTH_EC2_HOST }}
+          username: ${{ secrets.AUTH_EC2_USER }}
+          key: ${{ secrets.AUTH_EC2_SSH_KEY }}
+          script: |
+            # Detener y eliminar contenedores existentes
+            docker rm -f auth-backend || true
+            docker rm -f auth-frontend || true
+
+            # Clonar o actualizar el repositorio en EC2
+            cd ~/EcomVida-V1.0 || git clone https://github.com/tuusuario/tu-repo.git ~/EcomVida-V1.0 && cd ~/EcomVida-V1.0
+            git checkout test3
+            git pull origin test3
+
+            # ------------------------------------------
+            # BACKEND: auth-service
+            # ------------------------------------------
+            cd backend/autenticacion/auth-service
+
+            docker build -t auth-backend .
+
+            # Asegúrate de tener un archivo .env con la IP/RDS reales ya subido a EC2
+            docker run -d --name auth-backend -p 3001:3001 --env-file .env auth-backend
+
+            # ------------------------------------------
+            # FRONTEND: auth-front
+            # ------------------------------------------
+            cd ~/EcomVida-V1.0/frontend/auth-front
+
+            docker build -t auth-frontend .
+            docker run -d --name auth-frontend -p 80:80 auth-frontend
