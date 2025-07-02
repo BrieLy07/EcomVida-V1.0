@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    restart: always
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: ecomadmin
+      POSTGRES_PASSWORD: ecompass
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: .
+    container_name: auth-service
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - auth-db
+    environment:
+      PORT: 3001
+      DB_HOST: auth-db
+      DB_USER: ecomadmin
+      DB_PASSWORD: ecompass
+      DB_NAME: auth_db
+      DB_PORT: 5432
+      JWT_SECRET: secretoecom
+
+volumes:
+  auth_data:
