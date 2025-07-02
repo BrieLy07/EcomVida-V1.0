@@ -8,10 +8,8 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: {
-    rejectUnauthorized: true,
-    ca: fs.readFileSync(path.join(__dirname, 'certs', 'global-bundle.pem')).toString()
-  }
+  ssl: false
+
 });
 
 module.exports = pool;
