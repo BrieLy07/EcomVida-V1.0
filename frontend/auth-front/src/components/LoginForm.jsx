@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { login } from "../services/authService";
 
-const LoginForm = () => {
+const LoginForm = ({ onSuccess }) => {
   const [form, setForm] = useState({ correo: "", contraseña: "" });
 
   const handleChange = (e) => {
@@ -12,7 +12,8 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const res = await login(form);
-      alert("Token: " + res.data.token);
+      localStorage.setItem("token", res.data.token); // Guarda el token
+      onSuccess(); // Cambia la vista a Home
     } catch {
       alert("Credenciales inválidas");
     }
