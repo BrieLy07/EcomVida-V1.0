@@ -12,8 +12,10 @@ const LoginForm = ({ onSuccess }) => {
     e.preventDefault();
     try {
       const res = await login(form);
-      localStorage.setItem("token", res.data.token); // Guarda el token
-      onSuccess(); // Cambia la vista a Home
+      const { token, id } = res.data;
+
+      localStorage.setItem("token", token);  // almacena token
+      onSuccess(id);                         // pasa el ID al App.jsx
     } catch {
       alert("Credenciales inválidas");
     }

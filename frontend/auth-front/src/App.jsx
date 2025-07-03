@@ -2,6 +2,7 @@ import { useState } from "react";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Principal from "./pages/Principal";
+import Perfil from "./pages/Perfil";
 
 function App() {
   const [view, setView] = useState("home");
@@ -12,6 +13,10 @@ function App() {
 
   const handleLogout = () => {
     setView("home");
+  };
+
+  const handleIrPerfil = () => {
+    setView("perfil");
   };
 
   return (
@@ -59,7 +64,13 @@ function App() {
         </>
       )}
 
-      {view === "principal" && <Principal onLogout={handleLogout} />}
+      {view === "principal" && (
+        <Principal onLogout={handleLogout} onPerfil={handleIrPerfil} />
+      )}
+
+      {view === "perfil" && (
+        <Perfil onVolver={() => setView("principal")} />
+      )}
     </div>
   );
 }
