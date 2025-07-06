@@ -1,10 +1,27 @@
 import { useEffect, useState } from "react";
 import { obtenerPerfil, actualizarPerfil } from "../services/profileService";
+import {
+  obtenerDirecciones,
+  crearDireccion,
+  eliminarDireccion,
+} from "../services/direccionService";
 
 const Perfil = ({ onVolver }) => {
   const userId = "6866eac444d2a028f0877a21";
+  const token = localStorage.getItem("token");
+
   const [modoEditar, setModoEditar] = useState(false);
   const [perfil, setPerfil] = useState(null);
+  const [direcciones, setDirecciones] = useState([]);
+  const [nuevaDireccion, setNuevaDireccion] = useState({
+    direccion: "",
+    ciudad: "",
+    provincia: "",
+    pais: "",
+    codigo_postal: "",
+    telefono: "",
+  });
+
   const [form, setForm] = useState({
     nombre: "",
     apellido: "",
@@ -13,21 +30,21 @@ const Perfil = ({ onVolver }) => {
     numero: "",
   });
 
-useEffect(() => {
-  const cargarPerfil = async () => {
-    try {
-      console.log("Consultando perfil con ID:", userId);
-      const datos = await obtenerPerfil(userId);
-      console.log("Datos recibidos:", datos);
-      setPerfil(datos);
-      setForm(datos);
-    } catch (error) {
-      console.error("Error al obtener perfil:", error);
-    }
-  };
-  cargarPerfil();
-}, []);
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        const datos = await obtenerPerfil(userId);
+        setPerfil(datos);
+        setForm(datos);
 
+        const direccionesData = await obtenerDirecciones(userId, token);
+        setDirecciones(direccionesData);
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
+      }
+    };
+    cargarDatos();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,10 +56,37 @@ useEffect(() => {
     setModoEditar(false);
   };
 
+  const handleNuevaDireccion = (e) => {
+    setNuevaDireccion({ ...nuevaDireccion, [e.target.name]: e.target.value });
+  };
+
+  const handleCrearDireccion = async () => {
+    const ok = await crearDireccion(userId, nuevaDireccion, token);
+    if (ok) {
+      const actualizadas = await obtenerDirecciones(userId, token);
+      setDirecciones(actualizadas);
+      setNuevaDireccion({
+        direccion: "",
+        ciudad: "",
+        provincia: "",
+        pais: "",
+        codigo_postal: "",
+        telefono: "",
+      });
+    }
+  };
+
+  const handleEliminarDireccion = async (id) => {
+    const ok = await eliminarDireccion(id, token);
+    if (ok) {
+      setDirecciones(direcciones.filter((d) => d.id !== id));
+    }
+  };
+
   if (!perfil) return <p>Cargando perfil...</p>;
 
   return (
-    <div className="bg-white shadow p-6 rounded-lg w-full max-w-md">
+    <div className="bg-white shadow p-6 rounded-lg w-full max-w-2xl">
       <h2 className="text-xl font-bold mb-4">Mi Perfil</h2>
 
       {!modoEditar ? (
@@ -80,6 +124,38 @@ useEffect(() => {
           </div>
         </>
       )}
+
+      <hr className="my-6" />
+      <h3 className="text-lg font-semibold mb-2">Direcciones</h3>
+      {direcciones.length === 0 ? (
+        <p>No tienes direcciones registradas.</p>
+      ) : (
+        <ul className="space-y-2">
+          {direcciones.map((dir) => (
+            <li key={dir.id} className="border p-2 rounded">
+              <p>{dir.direccion}, {dir.ciudad}, {dir.provincia}</p>
+              <p>{dir.pais}, CP: {dir.codigo_postal}</p>
+              <p>Tel: {dir.telefono}</p>
+              <button onClick={() => handleEliminarDireccion(dir.id)} className="mt-1 bg-red-500 text-white px-2 py-1 text-sm rounded">
+                Eliminar
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h4 className="mt-6 font-medium">Agregar nueva dirección</h4>
+      <div className="grid grid-cols-1 gap-2">
+        <input name="direccion" placeholder="Dirección" value={nuevaDireccion.direccion} onChange={handleNuevaDireccion} className="input" />
+        <input name="ciudad" placeholder="Ciudad" value={nuevaDireccion.ciudad} onChange={handleNuevaDireccion} className="input" />
+        <input name="provincia" placeholder="Provincia" value={nuevaDireccion.provincia} onChange={handleNuevaDireccion} className="input" />
+        <input name="pais" placeholder="País" value={nuevaDireccion.pais} onChange={handleNuevaDireccion} className="input" />
+        <input name="codigo_postal" placeholder="Código Postal" value={nuevaDireccion.codigo_postal} onChange={handleNuevaDireccion} className="input" />
+        <input name="telefono" placeholder="Teléfono" value={nuevaDireccion.telefono} onChange={handleNuevaDireccion} className="input" />
+        <button onClick={handleCrearDireccion} className="bg-green-600 text-white px-4 py-1 rounded">
+          Guardar dirección
+        </button>
+      </div>
     </div>
   );
 };
