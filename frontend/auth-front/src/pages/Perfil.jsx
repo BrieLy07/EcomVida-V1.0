@@ -44,7 +44,7 @@ const Perfil = ({ onVolver }) => {
       }
     };
     cargarDatos();
-  }, []);
+  }, [token]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
