@@ -3,7 +3,7 @@ name: Despliegue EcomVida Address Service
 on:
   push:
     branches:
-      - test3
+      - main
 
 jobs:
   deploy:
@@ -16,9 +16,9 @@ jobs:
     - name: Desplegar en EC2 vía SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.AUTH_EC2_HOST }}
-        username: ${{ secrets.AUTH_EC2_USER }}
-        key: ${{ secrets.AUTH_EC2_SSH_KEY }}
+        host: ${{ secrets.AUTH_EC2_HOST_PROD }}
+        username: ${{ secrets.AUTH_EC2_USER_PROD }}
+        key: ${{ secrets.AUTH_EC2_SSH_KEY_PROD }}
         script: |
           # Elimina contenedor antiguo del microservicio si existe
           docker rm -f address-service || true
@@ -27,8 +27,8 @@ jobs:
           cd ~/EcomVida-V1.0 || git clone https://github.com/BrieLy07/EcomVida-V1.0.git ~/EcomVida-V1.0
           cd ~/EcomVida-V1.0
           git fetch origin
-          git checkout test3
-          git pull origin test3
+          git checkout main
+          git pull origin main
 
           # -----------------------------------
           # BACKEND: address-service
