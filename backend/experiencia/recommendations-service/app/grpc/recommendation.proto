@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package recommendation;
+
+service RecommendationService {
+  rpc GetRecommendations(UserRequest) returns (RecommendationList);
+  rpc GetRelatedProducts(ProductRequest) returns (RecommendationList);
+  rpc SendFeedback(FeedbackRequest) returns (FeedbackResponse);
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+message ProductRequest {
+  string product_id = 1;
+}
+
+message FeedbackRequest {
+  string user_id = 1;
+  string product_id = 2;
+  string feedback_type = 3;
+}
+
+message FeedbackResponse {
+  string message = 1;
+}
+
+message Recommendation {
+  string product_id = 1;
+  string product_name = 2;
+  string image_url = 3;
+}
+
+message RecommendationList {
+  repeated Recommendation items = 1;
+}

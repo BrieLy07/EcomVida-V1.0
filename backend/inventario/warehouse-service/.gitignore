@@ -1,0 +1,5 @@
+.env
+/app/warehouse
+*.log
+*.out
+*.exe

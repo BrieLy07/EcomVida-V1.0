@@ -1,0 +1,5 @@
+fastapi==0.110.0
+uvicorn==0.29.0
+pymongo==4.6.3
+strawberry-graphql==0.211.1
+python-dotenv==1.0.1

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package image;
+
+option go_package = "proto/imagepb";
+
+service ImageService {
+  rpc UploadImage(UploadImageRequest) returns (ImageResponse);
+  rpc GetImage(GetImageRequest) returns (ImageData);
+  rpc GetImagesByProduct(ProductImagesRequest) returns (ProductImagesResponse);
+  rpc DeleteImage(DeleteImageRequest) returns (DeleteResponse);
+}
+
+message UploadImageRequest {
+  string product_id = 1;
+  bytes image_data = 2;
+  string filename = 3;
+}
+
+message GetImageRequest {
+  string image_id = 1;
+}
+
+message ProductImagesRequest {
+  string product_id = 1;
+}
+
+message DeleteImageRequest {
+  string image_id = 1;
+}
+
+message ImageResponse {
+  string image_id = 1;
+  string url = 2;
+}
+
+message ProductImagesResponse {
+  repeated ImageResponse images = 1;
+}
+
+message ImageData {
+  string filename = 1;
+  bytes data = 2;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
