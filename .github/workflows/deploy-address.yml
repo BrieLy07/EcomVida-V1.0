@@ -1,0 +1,38 @@
+name: Despliegue EcomVida Address Service
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del repositorio
+      uses: actions/checkout@v3
+
+    - name: Desplegar en EC2 vía SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.AUTH_EC2_HOST_PROD }}
+        username: ${{ secrets.AUTH_EC2_USER_PROD }}
+        key: ${{ secrets.AUTH_EC2_SSH_KEY_PROD }}
+        script: |
+          # Elimina contenedor antiguo del microservicio si existe
+          docker rm -f address-service || true
+
+          # Clona o actualiza el repositorio
+          cd ~/EcomVida-V1.0 || git clone https://github.com/BrieLy07/EcomVida-V1.0.git ~/EcomVida-V1.0
+          cd ~/EcomVida-V1.0
+          git fetch origin
+          git checkout main
+          git pull origin main
+
+          # -----------------------------------
+          # BACKEND: address-service
+          # -----------------------------------
+          cd backend/autenticacion/address-service
+          docker build -t address-service .
+          docker run -d --name address-service -p 3003:3003 --env-file .env address-service
