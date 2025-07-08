@@ -38,6 +38,8 @@ const Perfil = ({ onVolver, userId }) => {
 
         const direccionesData = await obtenerDirecciones(userId, token);
         setDirecciones(direccionesData);
+        console.log("Direcciones:", direccionesData);
+
       } catch (error) {
         console.error("Error al cargar datos:", error);
       }
