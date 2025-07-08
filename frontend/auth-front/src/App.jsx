@@ -6,12 +6,16 @@ import Perfil from "./pages/Perfil";
 
 function App() {
   const [view, setView] = useState("home");
+  const [usuarioId, setUsuarioId] = useState(null); // 🆕 para guardar el ID
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (id) => {
+    setUsuarioId(id); // guardar el ID del usuario
     setView("principal");
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token"); // Limpia el token
+    setUsuarioId(null);               // Limpia el ID
     setView("home");
   };
 
@@ -69,7 +73,7 @@ function App() {
       )}
 
       {view === "perfil" && (
-        <Perfil onVolver={() => setView("principal")} />
+        <Perfil onVolver={() => setView("principal")} userId={usuarioId} />
       )}
     </div>
   );

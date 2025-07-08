@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../services/authService";
+import jwt_decode from "jwt-decode"; // Asegúrate de instalar: npm i jwt-decode
 
 const LoginForm = ({ onSuccess }) => {
   const [form, setForm] = useState({ correo: "", contraseña: "" });
@@ -12,10 +13,17 @@ const LoginForm = ({ onSuccess }) => {
     e.preventDefault();
     try {
       const res = await login(form);
-      const { token, id } = res.data;
+      const { token } = res.data;
 
-      localStorage.setItem("token", token);  // almacena token
-      onSuccess(id);                         // pasa el ID al App.jsx
+      // Guardar token en localStorage
+      localStorage.setItem("token", token);
+
+      // Decodificar token para obtener el ID
+      const decoded = jwt_decode(token);
+      const id = decoded.id;
+
+      // Pasar el ID hacia el componente principal
+      onSuccess(id);
     } catch {
       alert("Credenciales inválidas");
     }

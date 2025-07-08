@@ -6,8 +6,7 @@ import {
   eliminarDireccion,
 } from "../services/direccionService";
 
-const Perfil = ({ onVolver }) => {
-  const userId = "6866eac444d2a028f0877a21";
+const Perfil = ({ onVolver, userId }) => {
   const token = localStorage.getItem("token");
 
   const [modoEditar, setModoEditar] = useState(false);
@@ -43,8 +42,10 @@ const Perfil = ({ onVolver }) => {
         console.error("Error al cargar datos:", error);
       }
     };
-    cargarDatos();
-  }, [token]);
+    if (userId && token) {
+      cargarDatos();
+    }
+  }, [userId, token]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
