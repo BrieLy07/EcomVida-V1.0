@@ -37,13 +37,18 @@ const Perfil = ({ onVolver, userId }) => {
         setForm(datos);
 
         const direccionesData = await obtenerDirecciones(userId, token);
-        setDirecciones(direccionesData);
-        console.log("Direcciones:", direccionesData);
-
+        if (Array.isArray(direccionesData)) {
+          setDirecciones(direccionesData);
+        } else {
+          console.warn("La respuesta de direcciones no es un array:", direccionesData);
+          setDirecciones([]);
+        }
       } catch (error) {
         console.error("Error al cargar datos:", error);
+        setDirecciones([]);
       }
     };
+
     if (userId && token) {
       cargarDatos();
     }
@@ -67,7 +72,7 @@ const Perfil = ({ onVolver, userId }) => {
     const ok = await crearDireccion(userId, nuevaDireccion, token);
     if (ok) {
       const actualizadas = await obtenerDirecciones(userId, token);
-      setDirecciones(actualizadas);
+      setDirecciones(Array.isArray(actualizadas) ? actualizadas : []);
       setNuevaDireccion({
         direccion: "",
         ciudad: "",
