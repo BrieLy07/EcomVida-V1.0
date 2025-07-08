@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"address-service/repository"
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -10,21 +11,24 @@ import (
 
 func DeleteDireccionHandler(repo *repository.DireccionRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
 		idStr := params["addressId"]
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "ID inválido", http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "ID inválido"})
 			return
 		}
 
-		err = repo.Eliminar(id)
-		if err != nil {
-			http.Error(w, "Error al eliminar dirección", http.StatusInternalServerError)
+		if err := repo.Eliminar(id); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Error al eliminar dirección"})
 			return
 		}
 
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{"mensaje": "Dirección eliminada correctamente"})
 	}
 }

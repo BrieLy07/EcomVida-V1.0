@@ -12,28 +12,30 @@ import (
 
 func PutDireccionHandler(repo *repository.DireccionRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
 		idStr := params["addressId"]
 
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
-			http.Error(w, "ID inválido", http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "ID inválido"})
 			return
 		}
 
 		var direccion models.Direccion
-		err = json.NewDecoder(r.Body).Decode(&direccion)
-		if err != nil {
-			http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		if err := json.NewDecoder(r.Body).Decode(&direccion); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Datos inválidos"})
 			return
 		}
 
-		err = repo.Actualizar(id, direccion)
-		if err != nil {
-			http.Error(w, "Error al actualizar dirección", http.StatusInternalServerError)
+		if err := repo.Actualizar(id, direccion); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Error al actualizar dirección"})
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{"mensaje": "Dirección actualizada exitosamente"})
 	}
 }
