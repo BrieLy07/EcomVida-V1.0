@@ -19,7 +19,8 @@ func ConfigurarRutas(db *sql.DB) http.Handler {
 	api := r.PathPrefix("/").Subrouter()
 	api.Use(middleware.VerificarJWT)
 
-	api.HandleFunc("/users/{id}/addresses", handlers.GetDireccionesHandler(repo)).Methods("GET")
+	direccionHandler := handlers.NewDireccionHandler(repo)
+	api.HandleFunc("/users/{id}/addresses", direccionHandler.ObtenerDireccionesPorUsuario).Methods("GET")
 	api.HandleFunc("/users/{id}/addresses", handlers.PostDireccionHandler(repo)).Methods("POST")
 	api.HandleFunc("/addresses/{addressId}", handlers.PutDireccionHandler(repo)).Methods("PUT")
 	api.HandleFunc("/addresses/{addressId}", handlers.DeleteDireccionHandler(repo)).Methods("DELETE")

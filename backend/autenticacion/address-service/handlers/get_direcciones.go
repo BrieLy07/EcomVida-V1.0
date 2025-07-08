@@ -8,20 +8,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetDireccionesHandler(repo *repository.DireccionRepository) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		params := mux.Vars(r)
-		usuarioID := params["id"]
+type DireccionHandler struct {
+	Repo *repository.DireccionRepository
+}
 
-		direcciones, err := repo.ObtenerPorUsuario(usuarioID)
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Error al obtener direcciones"})
-			return
-		}
+func NewDireccionHandler(repo *repository.DireccionRepository) *DireccionHandler {
+	return &DireccionHandler{Repo: repo}
+}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(direcciones)
+func (h *DireccionHandler) ObtenerDireccionesPorUsuario(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	usuarioID := vars["id"]
+
+	direcciones, err := h.Repo.ObtenerPorUsuario(usuarioID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": "No se pudieron obtener las direcciones"})
+		return
 	}
+
+	json.NewEncoder(w).Encode(direcciones)
 }
