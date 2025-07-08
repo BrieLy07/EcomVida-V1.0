@@ -1,4 +1,4 @@
-name: Despliegue EcomVida Address-Service
+name: Despliegue EcomVida Address Service
 
 on:
   push:
@@ -20,10 +20,10 @@ jobs:
         username: ${{ secrets.AUTH_EC2_USER }}
         key: ${{ secrets.AUTH_EC2_SSH_KEY }}
         script: |
-          # Elimina contenedor antiguo del microservicio si existe
+          # Elimina contenedor antiguo del microservicio (si existe)
           docker rm -f address-service || true
 
-          # Clona o actualiza el repositorio
+          # Clona el repositorio si no existe, o actualiza si ya está
           cd ~/EcomVida-V1.0 || git clone https://github.com/BrieLy07/EcomVida-V1.0.git ~/EcomVida-V1.0
           cd ~/EcomVida-V1.0
           git fetch origin
