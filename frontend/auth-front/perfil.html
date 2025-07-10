@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil - ECOMVIDA</title>
+  <link rel="stylesheet" href="estilos/base.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Mi Perfil</h2>
+    <div id="perfil-info">
+      <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+      <p><strong>Apellido:</strong> <span id="apellido"></span></p>
+      <p><strong>Correo:</strong> <span id="correo"></span></p>
+      <p><strong>Número:</strong> <span id="numero"></span></p>
+      <button onclick="mostrarFormularioPerfil()">Editar Perfil</button>
+    </div>
+
+    <div id="perfil-formulario" style="display:none">
+      <input type="text" id="nombreInput" placeholder="Nombre">
+      <input type="text" id="apellidoInput" placeholder="Apellido">
+      <input type="email" id="correoInput" placeholder="Correo">
+      <input type="text" id="numeroInput" placeholder="Número">
+      <button onclick="guardarPerfil()">Guardar</button>
+    </div>
+
+    <h2>Dirección</h2>
+    <div id="direccion-info">
+      <p id="direccionTexto">Cargando dirección...</p>
+      <button onclick="mostrarFormularioDireccion()">Editar Dirección</button>
+      <button onclick="eliminarDireccion()">Eliminar Dirección</button>
+    </div>
+
+    <div id="direccion-formulario" style="display:none">
+      <input type="text" id="calle" placeholder="Calle">
+      <input type="text" id="ciudad" placeholder="Ciudad">
+      <input type="text" id="provincia" placeholder="Provincia">
+      <input type="text" id="codigo_postal" placeholder="Código Postal">
+      <button onclick="guardarDireccion()">Guardar Dirección</button>
+    </div>
+  </div>
+
+  <script src="js/perfil.js"></script>
+  <script src="js/direccion.js"></script>
+</body>
+</html>

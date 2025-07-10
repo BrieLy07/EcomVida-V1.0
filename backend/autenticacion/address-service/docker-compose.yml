@@ -1,0 +1,32 @@
+
+
+services:
+  address-db:
+    image: mysql:8
+    container_name: address-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: clave123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  address-service:
+    build: .
+    container_name: address-service
+    restart: always
+    ports:
+      - "3003:3003"
+    depends_on:
+      - address-db
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=clave123
+      - DB_HOST=address-db
+      - DB_PORT=3306        # ← CORREGIDO AQUÍ
+      - DB_NAME=address_db
+
+volumes:
+  mysql_data:

@@ -1,27 +1,31 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const authService = require('../services/authService');
+const db = require('../models/db');
+const bcrypt = require('bcryptjs');
+const { generarToken } = require('../utils/jwt');
 
-const login = async (req, res) => {
-  const { correo, contraseña } = req.body;
+async function login(req, res) {
+  const { usuario, password } = req.body;
+
   try {
-    const usuario = await authService.obtenerUsuarioPorCorreo(correo);
-    if (!usuario) return res.status(401).json({ error: 'Credenciales inválidas' });
+    const query = 'SELECT * FROM usuarios WHERE usuario = $1';
+    const result = await db.query(query, [usuario]);
 
-    const match = await bcrypt.compare(contraseña, usuario.contraseña);
-    if (!match) return res.status(401).json({ error: 'Credenciales inválidas' });
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Usuario no encontrado' });
+    }
 
-    const token = jwt.sign(
-      { id: usuario.id, correo: usuario.correo, usuario: usuario.usuario },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const user = result.rows[0];
+    const esValido = await bcrypt.compare(password, user.password);
 
-    res.json({ token });
-  } catch (err) {
-    console.error('Error al iniciar sesión:', err);
-    res.status(500).json({ error: 'Error interno al iniciar sesión' });
+    if (!esValido) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
+
+    const token = generarToken(user.id, user.rol);
+    res.json({ mensaje: 'Login exitoso', token });
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
-};
+}
 
-module.exports = login;
+module.exports = { login };

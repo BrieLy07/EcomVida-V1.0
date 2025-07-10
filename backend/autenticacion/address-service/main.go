@@ -1,38 +1,36 @@
 package main
 
 import (
-	"address-service/db"
-	"address-service/handlers"
-	"address-service/repository"
+	"address-service/database"
+	"address-service/routes"
 	"log"
 	"net/http"
-	"os"
 
-	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Cargar variables de entorno desde .env
-	if err := godotenv.Load(); err != nil {
-		log.Println("No se pudo cargar el archivo .env, se usarán variables de entorno del sistema")
-	}
+	godotenv.Load()
+	database.Conectar()
 
-	db := db.Conectar()
-	repo := repository.NewDireccionRepository(db)
+	r := routes.CargarRutas()
+	handler := corsMiddleware(r) // 👈 Aquí
 
-	r := mux.NewRouter()
+	log.Println("address-service corriendo en puerto 3003")
+	http.ListenAndServe(":3003", handler)
+}
 
-	r.HandleFunc("/users/{id}/addresses", handlers.ObtenerDirecciones(repo)).Methods("GET")
-	r.HandleFunc("/users/{id}/addresses", handlers.CrearDireccion(repo)).Methods("POST")
-	r.HandleFunc("/addresses/{id}", handlers.ActualizarDireccion(repo)).Methods("PUT")
-	r.HandleFunc("/addresses/{id}", handlers.EliminarDireccion(repo)).Methods("DELETE")
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*") // o restringe a tu dominio
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3003"
-	}
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
 
-	log.Println("Servidor escuchando en el puerto", port)
-	http.ListenAndServe(":"+port, r)
+		next.ServeHTTP(w, r)
+	})
 }

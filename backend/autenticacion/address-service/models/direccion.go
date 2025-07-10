@@ -1,12 +1,10 @@
 package models
 
 type Direccion struct {
-	ID           int    `json:"id"`
+	ID           int    `json:"id,omitempty"`
 	UsuarioID    string `json:"usuario_id"`
-	Direccion    string `json:"direccion"`
+	Calle        string `json:"calle"`
 	Ciudad       string `json:"ciudad"`
 	Provincia    string `json:"provincia"`
-	Pais         string `json:"pais"`
 	CodigoPostal string `json:"codigo_postal"`
-	Telefono     string `json:"telefono"`
 }

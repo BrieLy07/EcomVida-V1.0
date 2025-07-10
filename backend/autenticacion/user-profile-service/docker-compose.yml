@@ -1,9 +1,19 @@
 version: '3.8'
 
 services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+
   user-profile-service:
     build: .
+    container_name: user-profile-service
     ports:
       - "3002:3002"
-    env_file:
-      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_DB=perfil_db
+    depends_on:
+      - mongo

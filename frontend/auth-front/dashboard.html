@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - ECOMVIDA</title>
+  <link rel="stylesheet" href="estilos/base.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Dashboard</h2>
+    <p>Bienvenido, estás autenticado.</p>
+    <button onclick="location.href='perfil.html'">Mi Perfil</button>
+    <button onclick="logout()">Cerrar Sesión</button>
+  </div>
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

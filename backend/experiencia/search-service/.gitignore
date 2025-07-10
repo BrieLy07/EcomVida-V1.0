@@ -1,8 +1,0 @@
-/target
-**/*.rs.bk
-.env
-.DS_Store
-*.log
-.idea/
-.vscode/
-*.swp
