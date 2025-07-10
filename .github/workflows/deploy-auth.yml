@@ -3,7 +3,7 @@ name: Despliegue EcomVida Auth Service
 on:
   push:
     branches:
-      - test3
+      - test2.0
 
 jobs:
   deploy:

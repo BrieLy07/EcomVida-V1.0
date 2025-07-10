@@ -14,7 +14,8 @@ func NewDireccionRepository(db *sql.DB) *DireccionRepository {
 }
 
 func (r *DireccionRepository) ObtenerPorUsuario(usuarioID string) ([]models.Direccion, error) {
-	query := "SELECT * FROM direcciones WHERE usuario_id = ?"
+	query := `SELECT id, usuario_id, direccion, ciudad, provincia, pais, codigo_postal, telefono 
+	          FROM direcciones WHERE usuario_id = ?`
 	rows, err := r.DB.Query(query, usuarioID)
 	if err != nil {
 		return nil, err
@@ -30,7 +31,6 @@ func (r *DireccionRepository) ObtenerPorUsuario(usuarioID string) ([]models.Dire
 		}
 		direcciones = append(direcciones, d)
 	}
-
 	return direcciones, nil
 }
 
@@ -44,15 +44,14 @@ func (r *DireccionRepository) Crear(d models.Direccion) error {
 
 func (r *DireccionRepository) Actualizar(id int, d models.Direccion) error {
 	query := `
-		UPDATE direcciones
-		SET direccion=?, ciudad=?, provincia=?, pais=?, codigo_postal=?, telefono=?
+		UPDATE direcciones SET direccion=?, ciudad=?, provincia=?, pais=?, codigo_postal=?, telefono=?
 		WHERE id=?`
 	_, err := r.DB.Exec(query, d.Direccion, d.Ciudad, d.Provincia, d.Pais, d.CodigoPostal, d.Telefono, id)
 	return err
 }
 
 func (r *DireccionRepository) Eliminar(id int) error {
-	query := "DELETE FROM direcciones WHERE id = ?"
+	query := `DELETE FROM direcciones WHERE id = ?`
 	_, err := r.DB.Exec(query, id)
 	return err
 }

@@ -5,7 +5,6 @@ go 1.21.0
 toolchain go1.24.3
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1

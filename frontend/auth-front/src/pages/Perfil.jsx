@@ -8,7 +8,6 @@ import {
 
 const Perfil = ({ onVolver }) => {
   const userId = "6866eac444d2a028f0877a21";
-  const token = localStorage.getItem("token");
 
   const [modoEditar, setModoEditar] = useState(false);
   const [perfil, setPerfil] = useState(null);
@@ -37,14 +36,14 @@ const Perfil = ({ onVolver }) => {
         setPerfil(datos);
         setForm(datos);
 
-        const direccionesData = await obtenerDirecciones(userId, token);
+        const direccionesData = await obtenerDirecciones(userId);
         setDirecciones(direccionesData);
       } catch (error) {
         console.error("Error al cargar datos:", error);
       }
     };
     cargarDatos();
-  }, [token]);
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -61,9 +60,9 @@ const Perfil = ({ onVolver }) => {
   };
 
   const handleCrearDireccion = async () => {
-    const ok = await crearDireccion(userId, nuevaDireccion, token);
+    const ok = await crearDireccion(userId, nuevaDireccion);
     if (ok) {
-      const actualizadas = await obtenerDirecciones(userId, token);
+      const actualizadas = await obtenerDirecciones(userId);
       setDirecciones(actualizadas);
       setNuevaDireccion({
         direccion: "",
@@ -77,7 +76,7 @@ const Perfil = ({ onVolver }) => {
   };
 
   const handleEliminarDireccion = async (id) => {
-    const ok = await eliminarDireccion(id, token);
+    const ok = await eliminarDireccion(id);
     if (ok) {
       setDirecciones(direcciones.filter((d) => d.id !== id));
     }
@@ -107,14 +106,13 @@ const Perfil = ({ onVolver }) => {
           </div>
         </>
       ) : (
-        <>
-          <input name="nombre" value={form.nombre} onChange={handleChange} className="input" />
-          <input name="apellido" value={form.apellido} onChange={handleChange} className="input" />
-          <input name="usuario" value={form.usuario} onChange={handleChange} className="input" />
-          <input name="correo" value={form.correo} onChange={handleChange} className="input" />
-          <input name="numero" value={form.numero} onChange={handleChange} className="input" />
-
-          <div className="mt-4 space-x-2">
+        <div className="grid grid-cols-2 gap-2">
+          <input name="nombre" value={form.nombre} onChange={handleChange} className="input w-full" />
+          <input name="apellido" value={form.apellido} onChange={handleChange} className="input w-full" />
+          <input name="usuario" value={form.usuario} onChange={handleChange} className="input w-full" />
+          <input name="correo" value={form.correo} onChange={handleChange} className="input w-full" />
+          <input name="numero" value={form.numero} onChange={handleChange} className="input w-full" />
+          <div className="col-span-2 mt-2 space-x-2">
             <button onClick={handleGuardar} className="bg-blue-600 text-white px-4 py-1 rounded">
               Guardar
             </button>
@@ -122,7 +120,7 @@ const Perfil = ({ onVolver }) => {
               Cancelar
             </button>
           </div>
-        </>
+        </div>
       )}
 
       <hr className="my-6" />
@@ -145,14 +143,14 @@ const Perfil = ({ onVolver }) => {
       )}
 
       <h4 className="mt-6 font-medium">Agregar nueva dirección</h4>
-      <div className="grid grid-cols-1 gap-2">
-        <input name="direccion" placeholder="Dirección" value={nuevaDireccion.direccion} onChange={handleNuevaDireccion} className="input" />
-        <input name="ciudad" placeholder="Ciudad" value={nuevaDireccion.ciudad} onChange={handleNuevaDireccion} className="input" />
-        <input name="provincia" placeholder="Provincia" value={nuevaDireccion.provincia} onChange={handleNuevaDireccion} className="input" />
-        <input name="pais" placeholder="País" value={nuevaDireccion.pais} onChange={handleNuevaDireccion} className="input" />
-        <input name="codigo_postal" placeholder="Código Postal" value={nuevaDireccion.codigo_postal} onChange={handleNuevaDireccion} className="input" />
-        <input name="telefono" placeholder="Teléfono" value={nuevaDireccion.telefono} onChange={handleNuevaDireccion} className="input" />
-        <button onClick={handleCrearDireccion} className="bg-green-600 text-white px-4 py-1 rounded">
+      <div className="grid grid-cols-2 gap-2">
+        <input name="direccion" placeholder="Dirección" value={nuevaDireccion.direccion} onChange={handleNuevaDireccion} className="input w-full" />
+        <input name="ciudad" placeholder="Ciudad" value={nuevaDireccion.ciudad} onChange={handleNuevaDireccion} className="input w-full" />
+        <input name="provincia" placeholder="Provincia" value={nuevaDireccion.provincia} onChange={handleNuevaDireccion} className="input w-full" />
+        <input name="pais" placeholder="País" value={nuevaDireccion.pais} onChange={handleNuevaDireccion} className="input w-full" />
+        <input name="codigo_postal" placeholder="Código Postal" value={nuevaDireccion.codigo_postal} onChange={handleNuevaDireccion} className="input w-full" />
+        <input name="telefono" placeholder="Teléfono" value={nuevaDireccion.telefono} onChange={handleNuevaDireccion} className="input w-full" />
+        <button onClick={handleCrearDireccion} className="col-span-2 bg-green-600 text-white px-4 py-1 rounded">
           Guardar dirección
         </button>
       </div>

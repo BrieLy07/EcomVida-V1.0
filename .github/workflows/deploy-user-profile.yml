@@ -3,7 +3,7 @@ name: Despliegue EcomVida User Profile Service
 on:
   push:
     branches:
-      - test3
+      - test2.0
 
 jobs:
   deploy:

@@ -1,46 +1,38 @@
 package main
 
 import (
+	"address-service/db"
+	"address-service/handlers"
+	"address-service/repository"
 	"log"
 	"net/http"
 	"os"
 
-	"address-service/config"
-	"address-service/routes"
-
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error cargando archivo .env")
+	// Cargar variables de entorno desde .env
+	if err := godotenv.Load(); err != nil {
+		log.Println("No se pudo cargar el archivo .env, se usarán variables de entorno del sistema")
 	}
 
-	db := config.ConectarBaseDatos()
-	r := routes.ConfigurarRutas(db)
+	db := db.Conectar()
+	repo := repository.NewDireccionRepository(db)
+
+	r := mux.NewRouter()
+
+	r.HandleFunc("/users/{id}/addresses", handlers.ObtenerDirecciones(repo)).Methods("GET")
+	r.HandleFunc("/users/{id}/addresses", handlers.CrearDireccion(repo)).Methods("POST")
+	r.HandleFunc("/addresses/{id}", handlers.ActualizarDireccion(repo)).Methods("PUT")
+	r.HandleFunc("/addresses/{id}", handlers.EliminarDireccion(repo)).Methods("DELETE")
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3003"
 	}
 
-	log.Println("Servidor escuchando en el puerto " + port)
-	log.Fatal(http.ListenAndServe(":"+port, habilitarCORS(r)))
-
-}
-
-// MIDDLEWARE CORS
-func habilitarCORS(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Permitir solo el origen del frontend
-		w.Header().Set("Access-Control-Allow-Origin", "http://ecomvida-alb-973389764.us-east-1.elb.amazonaws.com")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		h.ServeHTTP(w, r)
-	})
+	log.Println("Servidor escuchando en el puerto", port)
+	http.ListenAndServe(":"+port, r)
 }
