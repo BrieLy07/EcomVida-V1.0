@@ -27,8 +27,8 @@ jobs:
           cd ~/EcomVida-V1.0 || git clone https://github.com/BrieLy07/EcomVida-V1.0.git ~/EcomVida-V1.0
           cd ~/EcomVida-V1.0
           git fetch origin
-          git checkout test3
-          git pull origin test3
+          git checkout test2.0
+          git pull origin test2.0
 
           # -----------------------------------
           # BACKEND: user-profile-service
