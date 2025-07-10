@@ -3,7 +3,7 @@ name: Despliegue EcomVida Address Service
 on:
   push:
     branches:
-      - test4
+      - test2.0
 
 jobs:
   deploy:
