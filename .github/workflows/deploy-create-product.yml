@@ -1,0 +1,76 @@
+name: Deploy createProductService to EC2
+
+on:
+  push:
+    branches:
+      - test2.0
+    paths:
+      - 'backend/product_domain/catalogService/createProduct/**'
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd backend/product_domain/catalogService/createProduct
+          npm install
+
+      - name: Run Jest tests
+        run: |
+          cd backend/product_domain/catalogService/createProduct
+          npm test
+
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t brielys/create-product-service:latest ./backend/product_domain/catalogService/createProduct
+
+      - name: Push Docker image
+        run: |
+          docker push brielys/create-product-service:latest
+
+  deploy-qa:
+    name: Deploy to QA 
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/test2.0'
+
+    steps:
+      - name: Deploy to QA via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_PRODUCT_DOMAIN_IP }}
+          username: ec2-user
+          key: ${{ secrets.EC2_PRODUCT_DOMAIN_PEM_KEY }}
+          script: |
+            cd EcomVida-V1.0/Backend/product_domain/catalogService/createProduct
+            docker pull brielys/create-product-service:latest
+            docker stop create-product-service || true
+            docker rm create-product-service || true
+            docker run -d --restart=always --name create-product-service -p 3010:3000 --env-file .env brielys/create-product-service:latest
+
