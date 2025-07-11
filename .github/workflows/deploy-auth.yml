@@ -1,4 +1,4 @@
-name: Despliegue EcomVida Auth Service
+name: Despliegue EcomVida Auth Services
 
 on:
   push:
