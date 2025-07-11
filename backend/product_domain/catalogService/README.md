@@ -37,8 +37,6 @@ catalogService/
 | Database   | MongoDB / DynamoDB |
 | Container  | Docker             |
 | Deployment | AWS EC2            |
-| Gateway    | NGINX              |
-| Auth       | JWT (if needed)    |
 
 ## 📡 API Endpoints
 | Method | Route              | Description            | Service       |
@@ -73,6 +71,3 @@ src/__tests__/
 ## 🛡️ Security
 JWT token validation (if enabled for admin-only routes)
 Environment configuration through .env files
-
-## 🧠 Maintainers
-Andy Chiquin - Developer 
