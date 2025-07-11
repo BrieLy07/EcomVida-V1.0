@@ -68,7 +68,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_PRODUCT_DOMAIN_PEM_KEY }}
           script: |
-            cd EcomVida-V1.0/Backend/product_domain/catalogService/createProduct
+            cd EcomVida-V1.0/backend/product_domain/catalogService/createProduct
             docker pull brielys/create-product-service:latest
             docker stop create-product-service || true
             docker rm create-product-service || true
